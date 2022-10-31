@@ -35,6 +35,9 @@ export interface RousseauNFTsInterface extends utils.Interface {
     "baseTokenURI()": FunctionFragment;
     "count()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getOwner(string)": FunctionFragment;
+    "getOwnerTest(string)": FunctionFragment;
+    "getSender()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isContentOwned(string)": FunctionFragment;
     "name()": FunctionFragment;
@@ -61,6 +64,9 @@ export interface RousseauNFTsInterface extends utils.Interface {
       | "baseTokenURI"
       | "count"
       | "getApproved"
+      | "getOwner"
+      | "getOwnerTest"
+      | "getSender"
       | "isApprovedForAll"
       | "isContentOwned"
       | "name"
@@ -97,6 +103,15 @@ export interface RousseauNFTsInterface extends utils.Interface {
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getOwner",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getOwnerTest",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "getSender", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -181,6 +196,12 @@ export interface RousseauNFTsInterface extends utils.Interface {
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getOwner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getOwnerTest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getSender", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -337,6 +358,18 @@ export interface RousseauNFTs extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getOwner(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getOwnerTest(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getSender(overrides?: CallOverrides): Promise<[string]>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -444,6 +477,18 @@ export interface RousseauNFTs extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getOwner(
+    uri: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getOwnerTest(
+    uri: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getSender(overrides?: CallOverrides): Promise<string>;
+
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
@@ -550,6 +595,18 @@ export interface RousseauNFTs extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getOwner(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getOwnerTest(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getSender(overrides?: CallOverrides): Promise<string>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -701,6 +758,18 @@ export interface RousseauNFTs extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getOwner(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOwnerTest(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSender(overrides?: CallOverrides): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -808,6 +877,18 @@ export interface RousseauNFTs extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getOwner(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getOwnerTest(
+      uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getSender(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,

@@ -90,6 +90,8 @@ const MetaDetailsModal = ({
         value: ethers.utils.parseEther("0.05"),
       });
 
+      console.log("result", result);
+
       await result.wait();
       onClose();
     } catch (err) {

@@ -13,6 +13,8 @@ contract RousseauNFTs is ERC721, ERC721URIStorage, Ownable {
 
     mapping(string => address) existingURIs;
 
+    mapping(string => address) URIs;
+
     /// @dev Base token URI used as a prefix by tokenURI().
     string public baseTokenURI;
 
@@ -34,7 +36,8 @@ contract RousseauNFTs is ERC721, ERC721URIStorage, Ownable {
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        existingURIs[uri] = msg.sender;
+        existingURIs[uri] = to;
+        URIs[uri] = msg.sender;
     }
 
     // The following functions are overrides required by Solidity.
@@ -56,21 +59,34 @@ contract RousseauNFTs is ERC721, ERC721URIStorage, Ownable {
         return existingURIs[uri] == msg.sender;
     }
 
+    function getOwner(string memory uri) public view returns (address) {
+        return existingURIs[uri];
+    }
+
+    function getOwnerTest(string memory uri) public view returns (address) {
+        return URIs[uri];
+    }
+
+    function getSender() public view returns (address) {
+        return msg.sender;
+    }
+
     function payToMint(
         address recipient,
         string memory metadataURI
-    ) public payable returns (uint256) {
+    ) public payable returns (address) {
         // require(existingURIs[metadataURI] == 0, 'NFT already minted!');
         require (msg.value >= 0.05 ether, 'Need to pay up!');
 
         uint256 newItemId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        existingURIs[metadataURI] = payable(msg.sender);
+        existingURIs[metadataURI] = recipient;
+        URIs[metadataURI] = msg.sender;
 
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, metadataURI);
 
-        return newItemId;
+        return msg.sender;
     }
 
     function count() public view returns (uint256) {
