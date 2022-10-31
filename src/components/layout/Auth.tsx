@@ -31,7 +31,6 @@ function Auth({ children }: { children: JSX.Element }) {
         <main className="container mx-auto flex min-h-screen flex-col items-center justify-center p-4">
           Please sign in.
         </main>
-        <Login />
       </>
     );
   }

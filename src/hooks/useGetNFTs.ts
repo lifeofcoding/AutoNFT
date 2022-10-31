@@ -4,7 +4,7 @@ import { useStore } from "../components/Store";
 const useGetNFTs = () => {
   const [store] = useStore((store) => store);
   const { contract } = store.getContract();
-  return useQuery<number>(["getGetNFTs"], async () => {
+  return useQuery<Object>(["getGetNFTs"], async () => {
     return await contract.count();
   });
 };

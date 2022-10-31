@@ -44,7 +44,7 @@ function Navbar({ path }: { path: string }) {
               alt="Flowbite Logo"
             />
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-              Firebase
+              AutoNFT
             </span>
           </a>
         </NextLink>
@@ -105,9 +105,14 @@ function Navbar({ path }: { path: string }) {
               </NextLink>
             </li>
             <li>
-              <a href="#" className={inactiveLinkClass}>
-                About
-              </a>
+              <NextLink href="/nfts">
+                <a
+                  className={path === "/" ? activeLinkClass : inactiveLinkClass}
+                  aria-current="page"
+                >
+                  NFTs
+                </a>
+              </NextLink>
             </li>
             <li>
               <a
