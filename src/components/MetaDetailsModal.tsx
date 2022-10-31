@@ -31,7 +31,6 @@ const MetaDetailsModal = ({
   onClose,
 }: MetaDetailsModalProps) => {
   const [store] = useStore((store) => store);
-  const { contract, signer } = store.getContract();
 
   const modalId = useId();
   const alert = useAlerts();
@@ -61,7 +60,10 @@ const MetaDetailsModal = ({
 
   const onSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+
+    const { contract, signer } = store.getContract();
     const { name, description, price } = formInput;
+
     if (!name || !description || !price || !fileUrl) {
       return alert({
         type: "error",
@@ -85,7 +87,7 @@ const MetaDetailsModal = ({
       const addr = connection.address;
       const contentId = urlParts[urlParts.length - 1];
       //   const metadataURI = `${contentId}/${parseInt(tokenId)}.json`;
-      console.log("contentId", contentId);
+
       const result = await contract.payToMint(addr, contentId, {
         value: ethers.utils.parseEther("0.05"),
       });

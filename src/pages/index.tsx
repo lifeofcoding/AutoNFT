@@ -5,7 +5,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Firebase App</title>
+        <title>AutoNFT</title>
         <meta
           name="description"
           content="Created by Jimmy Rousseau @lifeofcoding"
@@ -16,15 +16,15 @@ const Home: NextPage = () => {
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center p-4">
         <div className="relative">
           <h1 className="text-5xl font-extrabold leading-normal text-gray-700 mix-blend-color-burn md:text-[5rem]">
-            <span className="text-red-300">Fire</span>
-            <span className="text-purple-300">base</span> App
+            <span className="text-red-300">Auto</span>
+            <span className="text-purple-300">NFT</span>
           </h1>
           <h1
             className="absolute top-0 left-0 text-5xl font-extrabold leading-normal text-gray-700 opacity-75 md:text-[5rem]"
             aria-hidden="true"
           >
-            <span className="text-red-300">Fire</span>
-            <span className="text-purple-300">base</span> App
+            <span className="text-red-300">Auto</span>
+            <span className="text-purple-300">NFT</span>
           </h1>
         </div>
         <p className="text-2xl text-gray-700">This stack uses:</p>
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
             documentation="https://tailwindcss.com/"
           />
           <TechnologyCard
-            name="FireBase"
+            name="Ethers"
             description="Realtime data communication & auth"
             documentation="https://firebase.google.com/"
           />

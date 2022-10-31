@@ -28,13 +28,27 @@ import type {
   PromiseOrValue,
 } from "../../common";
 
+export declare namespace RousseauNFTs {
+  export type NFTStruct = {
+    tokenId: PromiseOrValue<BigNumberish>;
+    owner: PromiseOrValue<string>;
+  };
+
+  export type NFTStructOutput = [BigNumber, string] & {
+    tokenId: BigNumber;
+    owner: string;
+  };
+}
+
 export interface RousseauNFTsInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "baseTokenURI()": FunctionFragment;
     "count()": FunctionFragment;
+    "getAllNfts()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getMyNfts()": FunctionFragment;
     "getOwner(string)": FunctionFragment;
     "getOwnerTest(string)": FunctionFragment;
     "getSender()": FunctionFragment;
@@ -63,7 +77,9 @@ export interface RousseauNFTsInterface extends utils.Interface {
       | "balanceOf"
       | "baseTokenURI"
       | "count"
+      | "getAllNfts"
       | "getApproved"
+      | "getMyNfts"
       | "getOwner"
       | "getOwnerTest"
       | "getSender"
@@ -100,9 +116,14 @@ export interface RousseauNFTsInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "count", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "getAllNfts",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "getMyNfts", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getOwner",
     values: [PromiseOrValue<string>]
@@ -192,10 +213,12 @@ export interface RousseauNFTsInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "count", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getAllNfts", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getMyNfts", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getOwner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getOwnerTest",
@@ -353,10 +376,18 @@ export interface RousseauNFTs extends BaseContract {
 
     count(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    getAllNfts(
+      overrides?: CallOverrides
+    ): Promise<[RousseauNFTs.NFTStructOutput[]]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getMyNfts(
+      overrides?: CallOverrides
+    ): Promise<[RousseauNFTs.NFTStructOutput[]]>;
 
     getOwner(
       uri: PromiseOrValue<string>,
@@ -472,10 +503,16 @@ export interface RousseauNFTs extends BaseContract {
 
   count(overrides?: CallOverrides): Promise<BigNumber>;
 
+  getAllNfts(
+    overrides?: CallOverrides
+  ): Promise<RousseauNFTs.NFTStructOutput[]>;
+
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getMyNfts(overrides?: CallOverrides): Promise<RousseauNFTs.NFTStructOutput[]>;
 
   getOwner(
     uri: PromiseOrValue<string>,
@@ -591,10 +628,18 @@ export interface RousseauNFTs extends BaseContract {
 
     count(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getAllNfts(
+      overrides?: CallOverrides
+    ): Promise<RousseauNFTs.NFTStructOutput[]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getMyNfts(
+      overrides?: CallOverrides
+    ): Promise<RousseauNFTs.NFTStructOutput[]>;
 
     getOwner(
       uri: PromiseOrValue<string>,
@@ -753,10 +798,14 @@ export interface RousseauNFTs extends BaseContract {
 
     count(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getAllNfts(overrides?: CallOverrides): Promise<BigNumber>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getMyNfts(overrides?: CallOverrides): Promise<BigNumber>;
 
     getOwner(
       uri: PromiseOrValue<string>,
@@ -873,10 +922,14 @@ export interface RousseauNFTs extends BaseContract {
 
     count(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getAllNfts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getMyNfts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getOwner(
       uri: PromiseOrValue<string>,

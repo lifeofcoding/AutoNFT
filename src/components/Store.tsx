@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { ethers } from "ethers";
 import { contractABI, contractAddress, ethereum } from "../utils/constants";
-import { useRouter } from "next/router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAlerts } from "./layout/Alerts";
 
@@ -37,6 +36,7 @@ const getAccount = async () => {
 };
 
 const getContract = () => {
+  // if (!ethereum) return null;
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
   const contract = new ethers.Contract(contractAddress, contractABI, signer);
@@ -50,7 +50,6 @@ function useStoreData(): {
   subscribe: (callback: () => void) => () => void;
 } {
   const queryClient = useQueryClient();
-  const router = useRouter();
   const alert = useAlerts();
 
   const connectWallet = useCallback(async () => {
@@ -60,12 +59,11 @@ function useStoreData(): {
 
     queryClient.invalidateQueries(["useAccount"]);
 
-    ethereum.on("accountsChanged", () =>
-      queryClient.invalidateQueries(["useAccount"])
-    );
-
-    router.push("/dashboard");
-  }, [router, queryClient, alert]);
+    const accountsChanged = () => {
+      queryClient.invalidateQueries(["useAccount"]);
+    };
+    ethereum.on("accountsChanged", accountsChanged);
+  }, [queryClient, alert]);
 
   const store = useRef({
     account: "",

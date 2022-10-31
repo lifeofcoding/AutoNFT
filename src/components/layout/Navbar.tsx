@@ -7,7 +7,6 @@ import useAccount from "../../hooks/useAccount";
 import { shortenAddress } from "../../utils/shortenAddress";
 
 function Navbar({ path }: { path: string }) {
-  const [connectWallet] = useStore((store) => store.connectWallet);
   const { data: account } = useAccount();
 
   const [isOpen, setOpen] = useState(false);
@@ -50,13 +49,14 @@ function Navbar({ path }: { path: string }) {
         </NextLink>
         <div className="flex md:order-2">
           {!account && (
-            <button
-              onClick={connectWallet}
-              type="button"
-              className="mr-3 rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 md:mr-0"
-            >
-              Get started
-            </button>
+            <NextLink href="/dashboard">
+              <button
+                type="button"
+                className="mr-3 rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 md:mr-0"
+              >
+                Get started
+              </button>
+            </NextLink>
           )}
           {account && (
             <div className="flex items-center gap-2">
@@ -95,19 +95,23 @@ function Navbar({ path }: { path: string }) {
         >
           <ul className="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:text-sm md:font-medium md:dark:bg-gray-900">
             <li>
-              <NextLink href="/">
+              <NextLink href="/dashboard">
                 <a
-                  className={path === "/" ? activeLinkClass : inactiveLinkClass}
+                  className={
+                    path === "/dashboard" ? activeLinkClass : inactiveLinkClass
+                  }
                   aria-current="page"
                 >
-                  Home
+                  Generate
                 </a>
               </NextLink>
             </li>
             <li>
               <NextLink href="/nfts">
                 <a
-                  className={path === "/" ? activeLinkClass : inactiveLinkClass}
+                  className={
+                    path === "/nfts" ? activeLinkClass : inactiveLinkClass
+                  }
                   aria-current="page"
                 >
                   NFTs

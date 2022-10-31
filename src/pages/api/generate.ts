@@ -30,7 +30,10 @@ const Generate = async (
       });
 
       console.log("prediction", prediction);
-      return res.json({ success: prediction.length!!, prediction });
+      return res.json({
+        success: prediction && prediction.length!!,
+        prediction,
+      });
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Internal server error";

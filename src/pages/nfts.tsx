@@ -2,21 +2,16 @@ import type { NextPage, GetStaticProps } from "next";
 import Image from "next/image";
 import Head from "next/head";
 import { useRef, useState, useCallback, useEffect, useMemo } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useAlerts } from "../components/layout/Alerts";
 import { useStore } from "../components/Store";
 import useGetNFTs from "../hooks/useGetNFTs";
 import useNFTImage from "../hooks/useNFTImage";
+import useGetMyNFTs from "../hooks/useGetMyNFTs";
+import { BigNumber } from "ethers";
 
-function NFTImage({ tokenId }: { tokenId: Number }) {
-  const [isOwned, setIsOwned] = useState(false);
-  const [getContract] = useStore((store) => store.getContract);
-  const { contract } = getContract();
-  const { data } = useNFTImage(tokenId);
+function NFTImage({ tokenId }: { tokenId: BigNumber }) {
+  const { data } = useNFTImage(parseInt(tokenId.toString()));
 
   if (!data) return null;
-
-  console.log("isOwned", data.isOwned);
 
   return (
     <div>
@@ -26,16 +21,16 @@ function NFTImage({ tokenId }: { tokenId: Number }) {
 }
 
 const Dashboard: NextPage = () => {
-  const { data: count } = useGetNFTs();
+  const { data } = useGetMyNFTs();
 
   const nftList = useMemo(() => {
-    const nfts = count ? Array(parseInt(count as string)).fill(0) : [];
-    return nfts.map((_, i) => (
+    // const nfts = count ? Array(parseInt(count as string)).fill(0) : [];
+    return data?.map((d, i) => (
       <div key={i} className="flex items-center justify-center border">
-        <NFTImage tokenId={i} />
+        <NFTImage tokenId={d.tokenId} />
       </div>
     ));
-  }, [count]);
+  }, [data]);
 
   return (
     <>

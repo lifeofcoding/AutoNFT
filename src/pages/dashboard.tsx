@@ -6,6 +6,8 @@ import { useMutation } from "@tanstack/react-query";
 import type { Prediction } from "./api/generate";
 import { useAlerts } from "../components/layout/Alerts";
 import MetaDetailsModal from "../components/MetaDetailsModal";
+import { useStore } from "../components/Store";
+import useAccount from "../hooks/useAccount";
 
 const postText = async (text: string) => {
   const rawResponse = await fetch("/api/generate", {
@@ -21,6 +23,9 @@ const postText = async (text: string) => {
 };
 
 const Dashboard: NextPage = () => {
+  const [connectWallet] = useStore((store) => store.connectWallet);
+  const { data: account } = useAccount();
+  console.log("account", account);
   const textRef = useRef<HTMLInputElement | null>(null);
   const [prediction, setPrediction] = useState<null | string>(null);
   const alert = useAlerts();
@@ -47,7 +52,11 @@ const Dashboard: NextPage = () => {
   };
 
   const mintNft = () => {
-    setModalOpen(true);
+    if (!account) {
+      connectWallet();
+    } else {
+      setModalOpen(true);
+    }
   };
 
   const onModalClose = useCallback(() => {
@@ -127,6 +136,15 @@ const Dashboard: NextPage = () => {
               </button>
             </div>
           )}
+          {/* <div className="m-[5px]">
+            <button
+              type="button"
+              onClick={mintNft}
+              className="mr-3 rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 md:mr-0"
+            >
+              Mint New NFT
+            </button>
+          </div> */}
           <MetaDetailsModal
             fileUrl={prediction}
             open={modalOpen}
@@ -136,14 +154,6 @@ const Dashboard: NextPage = () => {
       </main>
     </>
   );
-};
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  return {
-    props: {
-      requiresLogin: true,
-    },
-  };
 };
 
 export default Dashboard;

@@ -11,9 +11,12 @@ contract RousseauNFTs is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    mapping(string => address) existingURIs;
+    mapping(uint256 => NFT) private _idToNFT;
 
-    mapping(string => address) URIs;
+    struct NFT {
+        uint256 tokenId;
+        address payable owner;
+    }
 
     /// @dev Base token URI used as a prefix by tokenURI().
     string public baseTokenURI;
@@ -34,10 +37,12 @@ contract RousseauNFTs is ERC721, ERC721URIStorage, Ownable {
     function safeMint(address to, string memory uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
+        _idToNFT[tokenId] = NFT(
+            tokenId, 
+            payable(msg.sender)
+        );
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        existingURIs[uri] = to;
-        URIs[uri] = msg.sender;
     }
 
     // The following functions are overrides required by Solidity.
@@ -55,38 +60,63 @@ contract RousseauNFTs is ERC721, ERC721URIStorage, Ownable {
         return super.tokenURI(tokenId);
     }
 
-    function isContentOwned(string memory uri) public view returns (bool) {
-        return existingURIs[uri] == msg.sender;
-    }
-
-    function getOwner(string memory uri) public view returns (address) {
-        return existingURIs[uri];
-    }
-
-    function getOwnerTest(string memory uri) public view returns (address) {
-        return URIs[uri];
-    }
-
     function getSender() public view returns (address) {
         return msg.sender;
     }
 
+
     function payToMint(
         address recipient,
         string memory metadataURI
-    ) public payable returns (address) {
+    ) public payable returns (uint256) {
         // require(existingURIs[metadataURI] == 0, 'NFT already minted!');
         require (msg.value >= 0.05 ether, 'Need to pay up!');
 
         uint256 newItemId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        existingURIs[metadataURI] = recipient;
-        URIs[metadataURI] = msg.sender;
+
+        _idToNFT[newItemId] = NFT(
+            newItemId, 
+            payable(msg.sender)
+        );
+
 
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, metadataURI);
 
-        return msg.sender;
+        return newItemId;
+    }
+
+    function getMyNfts() public view returns (NFT[] memory) {
+        uint nftCount = _tokenIdCounter.current();
+        uint myNftCount = 0;
+        for (uint i = 0; i < nftCount; i++) {
+            if (_idToNFT[i + 1].owner == msg.sender) {
+                myNftCount++;
+            }
+        }
+
+        NFT[] memory nfts = new NFT[](myNftCount);
+        uint nftsIndex = 0;
+        for (uint i = 0; i < nftCount; i++) {
+            if (_idToNFT[i + 1].owner == msg.sender) {
+                nfts[nftsIndex] = _idToNFT[i + 1];
+                nftsIndex++;
+            }
+        }
+        return nfts;
+    }
+
+    function getAllNfts() public view returns (NFT[] memory) {
+        uint nftCount = _tokenIdCounter.current();
+
+        NFT[] memory nfts = new NFT[](nftCount);
+        uint nftsIndex = 0;
+        for (uint i = 0; i < nftCount; i++) {
+            nfts[nftsIndex] = _idToNFT[i + 1];
+            nftsIndex++;
+        }
+        return nfts;
     }
 
     function count() public view returns (uint256) {
