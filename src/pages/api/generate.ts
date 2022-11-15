@@ -1,7 +1,7 @@
 import Replicate from "replicate-js";
 
 const replicate = new Replicate({
-  token: "d08f9cff7015954843993c90c96f1a87c9a52652",
+  token: process.env.REPLICATE_API_KEY,
 });
 
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -30,8 +30,9 @@ const Generate = async (
       });
 
       console.log("prediction", prediction);
+
       return res.json({
-        success: prediction && prediction.length!!,
+        success: prediction && !!prediction.length,
         prediction,
       });
     } catch (err) {
