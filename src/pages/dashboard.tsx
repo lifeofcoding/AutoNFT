@@ -42,8 +42,6 @@ const Dashboard: NextPage = () => {
     },
   });
 
-  // const isLoading = true;
-
   const onSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const text = textRef.current?.value;
@@ -136,15 +134,7 @@ const Dashboard: NextPage = () => {
               </button>
             </div>
           )}
-          {/* <div className="m-[5px]">
-            <button
-              type="button"
-              onClick={mintNft}
-              className="mr-3 rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 md:mr-0"
-            >
-              Mint New NFT
-            </button>
-          </div> */}
+
           <MetaDetailsModal
             fileUrl={prediction}
             open={modalOpen}

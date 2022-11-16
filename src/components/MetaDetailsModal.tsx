@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useState, useRef } from "react";
 import { create } from "ipfs-http-client";
 import { useAlerts } from "./layout/Alerts";
 import { useStore } from "./Store";
@@ -34,15 +34,16 @@ const MetaDetailsModal = ({
 
   const modalId = useId();
   const alert = useAlerts();
-  const [formInput, updateFormInput] = useState({
-    price: "",
-    name: "",
-    description: "",
-  });
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  const getFormData = () => {
+    const formData = new FormData(formRef.current!);
+    return Object.fromEntries(formData.entries());
+  };
 
   async function uploadToIPFS() {
-    const { name, description } = formInput;
-    // first, upload metadata to IPFS
+    const { name, description } = getFormData();
     const data = JSON.stringify({
       name,
       description,
@@ -51,7 +52,6 @@ const MetaDetailsModal = ({
     try {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      // after metadata is uploaded to IPFS, return the URL to use it in the transaction
       return url;
     } catch (error) {
       console.log("Error uploading file: ", error);
@@ -62,9 +62,9 @@ const MetaDetailsModal = ({
     e.preventDefault();
 
     const { contract, signer } = store.getContract();
-    const { name, description, price } = formInput;
+    const { name, description } = getFormData();
 
-    if (!name || !description || !price || !fileUrl) {
+    if (!name || !description || !fileUrl) {
       return alert({
         type: "error",
         message: "All fields are required",
@@ -82,11 +82,9 @@ const MetaDetailsModal = ({
 
     try {
       const urlParts = url.split("/");
-      const tokenId = await contract.count();
       const connection = contract.connect(signer);
       const addr = connection.address;
       const contentId = urlParts[urlParts.length - 1];
-      //   const metadataURI = `${contentId}/${parseInt(tokenId)}.json`;
 
       const result = await contract.payToMint(addr, contentId, {
         value: ethers.utils.parseEther("0.05"),
@@ -96,6 +94,7 @@ const MetaDetailsModal = ({
 
       await result.wait();
       onClose();
+      alert({ type: "success", message: "New NFT Minted SUccessfully" });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed";
       alert({ type: "error", message: errorMessage });
@@ -138,32 +137,23 @@ const MetaDetailsModal = ({
             </button>
           </div>
           <div className="space-y-6 p-6">
-            <form onSubmit={onSubmit} className="flex justify-center">
+            <form
+              onSubmit={onSubmit}
+              className="flex justify-center"
+              ref={formRef}
+            >
               <div className="flex w-1/2 flex-col pb-12">
                 <input
                   placeholder="Asset Name"
                   className="mt-8 rounded border p-4"
-                  onChange={(e) =>
-                    updateFormInput({ ...formInput, name: e.target.value })
-                  }
+                  name="name"
                 />
                 <textarea
                   placeholder="Asset Description"
                   className="mt-2 rounded border p-4"
-                  onChange={(e) =>
-                    updateFormInput({
-                      ...formInput,
-                      description: e.target.value,
-                    })
-                  }
+                  name="description"
                 />
-                <input
-                  placeholder="Asset Price in Eth"
-                  className="mt-2 rounded border p-4"
-                  onChange={(e) =>
-                    updateFormInput({ ...formInput, price: e.target.value })
-                  }
-                />
+
                 <button
                   type="submit"
                   className="mt-4 rounded bg-teal-400 p-4 font-bold text-white shadow-lg"

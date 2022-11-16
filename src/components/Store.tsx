@@ -13,7 +13,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAlerts } from "./layout/Alerts";
 
 type Store = {
-  account: string;
   connectWallet: () => Promise<any>;
   getContract: () => {
     signer: ethers.providers.JsonRpcSigner;
@@ -66,7 +65,6 @@ function useStoreData(): {
   }, [queryClient, alert]);
 
   const store = useRef({
-    account: "",
     connectWallet,
     getContract,
   });

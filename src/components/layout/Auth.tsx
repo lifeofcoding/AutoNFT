@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Login from "../login";
 import useAccount from "../../hooks/useAccount";
 
 function Auth({ children }: { children: JSX.Element }) {
